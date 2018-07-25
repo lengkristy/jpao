@@ -32,7 +32,9 @@ public class DataAccessTest {
                     "jdbc:oracle:thin:@192.168.1.241:1521:jcydb",
                     "tyyw", "tyyw");
             System.out.println("连接成功");
-            DataAccess da = DataAccess.getDataAccess(conn,true);
+            DataAccess da = DataAccess.getDataAccess(conn,false);
+
+            DataAccess dataAccess = DataAccess.getDataAccess(null,true);
             da.Basic(true);
             da.addParam(new KeyValueItem("p_bmsah","深宝检预析立[2014]44030600001号", ProcedureParamType.IN));
             DataTable dt = da.doExecuteDataTable("pkg_ssjd_latj.proc_test");

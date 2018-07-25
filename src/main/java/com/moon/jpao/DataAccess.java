@@ -45,11 +45,13 @@ public class DataAccess {
      * @return
      */
     public static synchronized DataAccess getDataAccess(Connection conn,boolean enableCache){
-        if (enableCache && _DATA_ACCESS != null){
+        if (enableCache && _DATA_ACCESS != null && conn == null){
             return  _DATA_ACCESS;
-        }else{
+        }else if (!enableCache && conn != null){
             _DATA_ACCESS = new DataAccess(conn);
             return _DATA_ACCESS;
+        }else{
+            return null;
         }
     }
 
