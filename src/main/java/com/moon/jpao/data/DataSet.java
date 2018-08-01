@@ -26,7 +26,7 @@ public class DataSet {
 
     public DataTable getDataTable(int index){
         if (this.set != null){
-            return this.set.get(0);
+            return this.set.get(index);
         }else{
             return null;
         }

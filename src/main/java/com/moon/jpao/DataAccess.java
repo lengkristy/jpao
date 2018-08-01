@@ -152,7 +152,7 @@ public class DataAccess {
                 }
             }
             rs = (ResultSet)cstmt.getObject("p_cursor");
-            dt = parseDataTable(rs);
+            dt = parseDataTable(rs,"p_cursor");
         }catch (Exception e){
             throw e;
         }finally {
@@ -201,7 +201,7 @@ public class DataAccess {
                 if (this.result.get(res) instanceof ResultSet){
                     ResultSet rs = (ResultSet) this.result.get(res);
                     try{
-                        DataTable dt = parseDataTable(rs);
+                        DataTable dt = parseDataTable(rs,res);
                         ds.addDataTable(dt);
                     }catch (Exception e){
                         throw e;
@@ -307,10 +307,11 @@ public class DataAccess {
         }
     }
 
-    private DataTable parseDataTable(ResultSet rs)throws Exception{
+    private DataTable parseDataTable(ResultSet rs,String tableName)throws Exception{
         DataTable dt = null;
         int col = rs.getMetaData().getColumnCount();
         dt = new DataTable();
+        dt.setName(tableName);
         while(rs.next()){
             DataRow dr = new DataRow();
             for (int i = 1;i<=col;i++){

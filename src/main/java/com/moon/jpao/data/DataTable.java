@@ -12,6 +12,9 @@ public class DataTable {
     /**数据行集合*/
     private List<DataRow> rowList;
 
+    /**数据表名称*/
+    private String name;
+
     public DataTable(){
         rowList = new ArrayList<DataRow>();
     }
@@ -49,5 +52,13 @@ public class DataTable {
         if (dataRow != null) {
             this.rowList.add(dataRow);
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
