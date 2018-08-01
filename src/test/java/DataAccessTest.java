@@ -4,15 +4,13 @@ import com.moon.jpao.ProcedureParamType;
 import com.moon.jpao.data.DataConvert;
 import com.moon.jpao.data.DataSet;
 import com.moon.jpao.data.DataTable;
+import com.moon.util.SqlTypeUtil;
 import oracle.jdbc.OracleTypes;
 import oracle.sql.CLOB;
 import org.junit.Test;
 
 import java.io.*;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 /**
@@ -53,8 +51,8 @@ public class DataAccessTest {
             da.addParam(new KeyValueItem("p_fxwbjg",OracleTypes.CURSOR,ProcedureParamType.OUT));
             DataSet ds = da.doExecuteDataSet("pkg_ssjd_lafxbg.proc_getzslaslqk");
             CLOB str = (CLOB)ds.getDataTable(1).getRow(0).getColumn(0).getValue();
-            String ss = clobToString(str);
-            System.out.println();
+            String ss = SqlTypeUtil.clobToString(str);
+            System.out.println(ss);
 //            System.out.println("结果集数量：" + dt.getRowCount());
 //            da = DataAccess.getDataAccess(null,true);
 //            da.Basic(true);
@@ -75,20 +73,5 @@ public class DataAccessTest {
                 }
             }
         }
-    }
-
-    public String clobToString(Clob clob) throws SQLException, IOException {
-
-        String reString = "";
-        Reader is = clob.getCharacterStream();// 得到流
-        BufferedReader br = new BufferedReader(is);
-        String s = br.readLine();
-        StringBuffer sb = new StringBuffer();
-        while (s != null) {// 执行循环将字符串全部取出付值给StringBuffer由StringBuffer转成STRING
-            sb.append(s);
-            s = br.readLine();
-        }
-        reString = sb.toString();
-        return reString;
     }
 }
