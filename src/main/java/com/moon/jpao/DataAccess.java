@@ -2,6 +2,7 @@ package com.moon.jpao;
 
 import com.moon.jpao.data.DataColumn;
 import com.moon.jpao.data.DataRow;
+import com.moon.jpao.data.DataSet;
 import com.moon.jpao.data.DataTable;
 import oracle.jdbc.OracleTypes;
 
@@ -150,24 +151,8 @@ public class DataAccess {
                     }
                 }
             }
-            //获取游标
             rs = (ResultSet)cstmt.getObject("p_cursor");
-            int col = rs.getMetaData().getColumnCount();
-            dt = new DataTable();
-            while(rs.next()){
-                DataRow dr = new DataRow();
-                for (int i = 1;i<=col;i++){
-                    DataColumn dc = new DataColumn();
-                    dc.setColumnName(rs.getMetaData().getColumnName(i));
-                    if (rs.getObject(i) != null){
-                        dc.setValue(rs.getObject(i));
-                        //判断值的类型
-                        dc.setC(rs.getObject(i).getClass());
-                    }
-                    dr.addColumn(dc);
-                }
-                dt.addRow(dr);
-            }
+            dt = parseDataTable(rs);
         }catch (Exception e){
             throw e;
         }finally {
@@ -187,6 +172,62 @@ public class DataAccess {
             }
         }
         return dt;
+    }
+
+    /**
+     * 执行存储过程，返回
+     * @param procName
+     * @return
+     * @throws Exception
+     */
+    public DataSet doExecuteDataSet(String procName)throws Exception{
+        DataSet ds = null;
+        CallableStatement cstmt = null;
+        try{
+            cstmt=this.conn.prepareCall(preExecuteCallProcedure(procName));//conn为java.sql.Connection对象
+            registOutParam(cstmt);//设置参数
+            //执行存储过程
+            cstmt.execute();
+            //获取结果集
+            if (this.params != null && this.params.size() > 0){
+                for (KeyValueItem item:this.params) {
+                    if (item.getParamType() == ProcedureParamType.OUT){//获取输出参数
+                        this.result.put(item.getkey(),cstmt.getObject(item.getkey()));
+                    }
+                }
+            }
+            ds = new DataSet();
+            for (String res:this.result.keySet()) {
+                if (this.result.get(res) instanceof ResultSet){
+                    ResultSet rs = (ResultSet) this.result.get(res);
+                    try{
+                        DataTable dt = parseDataTable(rs);
+                        ds.addDataTable(dt);
+                    }catch (Exception e){
+                        throw e;
+                    }finally {
+                        if (rs != null){
+                            try{
+                                rs.close();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+            throw e;
+        }finally {
+            if (cstmt != null){
+                try{
+                    cstmt.close();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return ds;
     }
 
     /**
@@ -264,5 +305,26 @@ public class DataAccess {
                 }
             }
         }
+    }
+
+    private DataTable parseDataTable(ResultSet rs)throws Exception{
+        DataTable dt = null;
+        int col = rs.getMetaData().getColumnCount();
+        dt = new DataTable();
+        while(rs.next()){
+            DataRow dr = new DataRow();
+            for (int i = 1;i<=col;i++){
+                DataColumn dc = new DataColumn();
+                dc.setColumnName(rs.getMetaData().getColumnName(i));
+                if (rs.getObject(i) != null){
+                    dc.setValue(rs.getObject(i));
+                    //判断值的类型
+                    dc.setC(rs.getObject(i).getClass());
+                }
+                dr.addColumn(dc);
+            }
+            dt.addRow(dr);
+        }
+        return dt;
     }
 }

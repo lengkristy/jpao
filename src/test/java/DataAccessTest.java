@@ -2,6 +2,7 @@ import com.moon.jpao.DataAccess;
 import com.moon.jpao.KeyValueItem;
 import com.moon.jpao.ProcedureParamType;
 import com.moon.jpao.data.DataConvert;
+import com.moon.jpao.data.DataSet;
 import com.moon.jpao.data.DataTable;
 import org.junit.Test;
 
@@ -36,17 +37,18 @@ public class DataAccessTest {
 
             DataAccess dataAccess = DataAccess.getDataAccess(null,true);
             da.Basic(true);
-            da.addParam(new KeyValueItem("p_bmsah","深宝检预析立[2014]44030600001号", ProcedureParamType.IN));
-            DataTable dt = da.doExecuteDataTable("pkg_ssjd_latj.proc_test");
-            System.out.println("结果集数量：" + dt.getRowCount());
-            da = DataAccess.getDataAccess(null,true);
-            da.Basic(true);
-            da.addParam(new KeyValueItem("p_bmsah","深宝检预析立[2014]44030600001号", ProcedureParamType.IN));
-            dt = da.doExecuteDataTable("pkg_ssjd_latj.proc_test");
-            List<TYYW_GG_AJJBXX> list = DataConvert.convert(dt,TYYW_GG_AJJBXX.class);
-            for (TYYW_GG_AJJBXX ajxx:list) {
-                System.out.println(ajxx.getBmsah() + ":" + ajxx.getTysah());
-            }
+            da.addParam(new KeyValueItem("p_uuid","ef5d51bbcd8d445395014b3ffb68e56b", ProcedureParamType.IN));
+            DataSet ds = da.doExecuteDataSet("pkg_ssjd_latj.PROC_YX_SSJD_LAJD_FXBG_GETBYID");
+            System.out.println(ds.getCount());
+//            System.out.println("结果集数量：" + dt.getRowCount());
+//            da = DataAccess.getDataAccess(null,true);
+//            da.Basic(true);
+//            da.addParam(new KeyValueItem("p_bmsah","深宝检预析立[2014]44030600001号", ProcedureParamType.IN));
+//            dt = da.doExecuteDataTable("pkg_ssjd_latj.proc_test");
+//            List<TYYW_GG_AJJBXX> list = DataConvert.convert(dt,TYYW_GG_AJJBXX.class);
+//            for (TYYW_GG_AJJBXX ajxx:list) {
+//                System.out.println(ajxx.getBmsah() + ":" + ajxx.getTysah());
+//            }
         }catch (Exception e){
             e.printStackTrace();
         }finally {
