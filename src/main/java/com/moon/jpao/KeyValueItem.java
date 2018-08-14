@@ -18,6 +18,12 @@ public class KeyValueItem {
         this.paramType = paramType;
     }
 
+    public KeyValueItem(String key,Object value){
+        this.key = key;
+        this.value = value;
+        this.paramType = ProcedureParamType.IN;
+    }
+
     public ProcedureParamType getParamType(){
         return this.paramType;
     }
