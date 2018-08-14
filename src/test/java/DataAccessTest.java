@@ -6,6 +6,7 @@ import com.moon.jpao.data.DataSet;
 import com.moon.jpao.data.DataTable;
 import com.moon.util.SqlTypeUtil;
 import oracle.jdbc.OracleTypes;
+//import oracle.sql.CLOB;
 import oracle.sql.CLOB;
 import org.junit.Test;
 
