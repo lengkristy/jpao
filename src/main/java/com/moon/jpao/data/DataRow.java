@@ -69,4 +69,8 @@ public class DataRow {
             this.columnList.add(dataColumn);
         }
     }
+
+    public List<DataColumn> getColumnList() {
+        return columnList;
+    }
 }

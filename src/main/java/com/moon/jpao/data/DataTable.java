@@ -45,6 +45,14 @@ public class DataTable {
     }
 
     /**
+     * 获取数据行列表
+     * @return
+     */
+    public List<DataRow> getRowList(){
+        return rowList;
+    }
+
+    /**
      * 添加数据行
      * @param dataRow
      */
